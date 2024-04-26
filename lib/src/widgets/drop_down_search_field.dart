@@ -840,7 +840,7 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>>
             _suggestionsBox!.direction == AxisDirection.down
                 ? _suggestionsBox!.textBoxHeight +
                     widget.suggestionsBoxVerticalOffset
-                : -(widget.suggestionsBoxVerticalOffset + 100)),
+                : -widget.suggestionsBoxVerticalOffset),
         child: TextFieldTapRegion(
             onTapOutside: (e) {
               if (widget
@@ -850,14 +850,14 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>>
                 }
               }
             },
-            child: suggestionsList
-            /* _suggestionsBox!.direction == AxisDirection.down
+            child: _suggestionsBox!.direction == AxisDirection.down
                 ? suggestionsList
                 : FractionalTranslation(
-                    translation: const Offset(0.0, -1.0), // visually flips list to go up
+                    transformHitTests: false,
+                    translation:
+                        const Offset(0.0, -1.0), // visually flips list to go up
                     child: suggestionsList,
-                  ) */
-            ),
+                  )),
       );
 
       // When wrapped in the Positioned widget, the suggestions box widget
