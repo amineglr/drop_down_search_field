@@ -840,7 +840,7 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>>
             _suggestionsBox!.direction == AxisDirection.down
                 ? _suggestionsBox!.textBoxHeight +
                     widget.suggestionsBoxVerticalOffset
-                : -widget.suggestionsBoxVerticalOffset),
+                : -(widget.suggestionsBoxVerticalOffset + 100)),
         child: TextFieldTapRegion(
             onTapOutside: (e) {
               if (widget
