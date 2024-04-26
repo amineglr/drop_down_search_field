@@ -853,8 +853,8 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>>
             child: _suggestionsBox!.direction == AxisDirection.down
                 ? suggestionsList
                 : Transform.translate(
-                    offset:
-                        const Offset(0.0, -1.0), // visually flips list to go up
+                    offset: const Offset(
+                        0.0, -10.0), // visually flips list to go up
                     child: suggestionsList,
                   )),
       );
