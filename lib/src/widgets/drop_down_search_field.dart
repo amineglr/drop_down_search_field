@@ -577,24 +577,30 @@ class DropDownSearchField<T> extends StatefulWidget {
     required this.displayAllSuggestionWhenTap,
     super.key,
   })  : assert(animationStart >= 0.0 && animationStart <= 1.0),
-        assert(direction == AxisDirection.down || direction == AxisDirection.up),
+        assert(
+            direction == AxisDirection.down || direction == AxisDirection.up),
         assert(minCharsForSuggestions >= 0),
-        assert(!hideKeyboardOnDrag || hideKeyboardOnDrag && !hideSuggestionsOnKeyboardHide);
+        assert(!hideKeyboardOnDrag ||
+            hideKeyboardOnDrag && !hideSuggestionsOnKeyboardHide);
 
   @override
   // ignore: library_private_types_in_public_api
   _DropDownSearchFieldState<T> createState() => _DropDownSearchFieldState<T>();
 }
 
-class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with WidgetsBindingObserver {
+class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>>
+    with WidgetsBindingObserver {
   FocusNode? _focusNode;
-  final KeyboardSuggestionSelectionNotifier _keyboardSuggestionSelectionNotifier =
+  final KeyboardSuggestionSelectionNotifier
+      _keyboardSuggestionSelectionNotifier =
       KeyboardSuggestionSelectionNotifier();
   TextEditingController? _textEditingController;
   SuggestionsBox? _suggestionsBox;
 
-  TextEditingController? get _effectiveController => widget.textFieldConfiguration.controller ?? _textEditingController;
-  FocusNode? get _effectiveFocusNode => widget.textFieldConfiguration.focusNode ?? _focusNode;
+  TextEditingController? get _effectiveController =>
+      widget.textFieldConfiguration.controller ?? _textEditingController;
+  FocusNode? get _effectiveFocusNode =>
+      widget.textFieldConfiguration.focusNode ?? _focusNode;
   late VoidCallback _focusNodeListener;
 
   final LayerLink _layerLink = LayerLink();
@@ -613,7 +619,8 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
 
   bool _areSuggestionsFocused = false;
   late final _shouldRefreshSuggestionsFocusIndex =
-      ShouldRefreshSuggestionFocusIndexNotifier(textFieldFocusNode: _effectiveFocusNode);
+      ShouldRefreshSuggestionFocusIndexNotifier(
+          textFieldFocusNode: _effectiveFocusNode);
 
   @override
   void didChangeMetrics() {
@@ -638,8 +645,9 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
 
   KeyEventResult _onKeyEvent(FocusNode _, KeyEvent event) {
     // HardwareKeyboard.instance.isLogicalKeyPressed
-  
-    if (event.logicalKey == LogicalKeyboardKey.arrowUp || event.logicalKey == LogicalKeyboardKey.arrowDown) {
+
+    if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+        event.logicalKey == LogicalKeyboardKey.arrowDown) {
       // do nothing to avoid puzzling users until keyboard arrow nav is implemented
     } else {
       _keyboardSuggestionSelectionNotifier.onKeyboardEvent(event);
@@ -656,7 +664,8 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
       this._textEditingController = TextEditingController();
     }
 
-    final textFieldConfigurationFocusNode = widget.textFieldConfiguration.focusNode;
+    final textFieldConfigurationFocusNode =
+        widget.textFieldConfiguration.focusNode;
     if (textFieldConfigurationFocusNode == null) {
       this._focusNode = FocusNode(onKeyEvent: _onKeyEvent);
     } else if (textFieldConfigurationFocusNode.onKeyEvent == null) {
@@ -682,7 +691,8 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
     );
 
     widget.suggestionsBoxController?.suggestionsBox = this._suggestionsBox;
-    widget.suggestionsBoxController?.effectiveFocusNode = this._effectiveFocusNode;
+    widget.suggestionsBoxController?.effectiveFocusNode =
+        this._effectiveFocusNode;
 
     this._focusNodeListener = () {
       if (_effectiveFocusNode!.hasFocus) {
@@ -699,7 +709,8 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
     this._effectiveFocusNode!.addListener(_focusNodeListener);
 
     // hide suggestions box on keyboard closed
-    this._keyboardVisibilitySubscription = _keyboardVisibility?.listen((bool isVisible) {
+    this._keyboardVisibilitySubscription =
+        _keyboardVisibility?.listen((bool isVisible) {
       if (widget.hideSuggestionsOnKeyboardHide && !isVisible) {
         _effectiveFocusNode!.unfocus();
       }
@@ -737,7 +748,8 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
     _resizeOnScrollTimer?.cancel();
     if (isScrolling) {
       // Scroll started
-      _resizeOnScrollTimer = Timer.periodic(_resizeOnScrollRefreshRate, (timer) {
+      _resizeOnScrollTimer =
+          Timer.periodic(_resizeOnScrollRefreshRate, (timer) {
         _suggestionsBox!.resize();
       });
     } else {
@@ -790,8 +802,10 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
         hideOnError: widget.hideOnError,
         keepSuggestionsOnLoading: widget.keepSuggestionsOnLoading,
         minCharsForSuggestions: widget.minCharsForSuggestions,
-        keyboardSuggestionSelectionNotifier: _keyboardSuggestionSelectionNotifier,
-        shouldRefreshSuggestionFocusIndexNotifier: _shouldRefreshSuggestionsFocusIndex,
+        keyboardSuggestionSelectionNotifier:
+            _keyboardSuggestionSelectionNotifier,
+        shouldRefreshSuggestionFocusIndexNotifier:
+            _shouldRefreshSuggestionsFocusIndex,
         giveTextFieldFocus: giveTextFieldFocus,
         onSuggestionFocus: onSuggestionFocus,
         onKeyEvent: _onKeyEvent,
@@ -802,14 +816,17 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
       double w = _suggestionsBox!.textBoxWidth;
       if (widget.suggestionsBoxDecoration.constraints != null) {
         if (widget.suggestionsBoxDecoration.constraints!.minWidth != 0.0 &&
-            widget.suggestionsBoxDecoration.constraints!.maxWidth != double.infinity) {
+            widget.suggestionsBoxDecoration.constraints!.maxWidth !=
+                double.infinity) {
           w = (widget.suggestionsBoxDecoration.constraints!.minWidth +
                   widget.suggestionsBoxDecoration.constraints!.maxWidth) /
               2;
-        } else if (widget.suggestionsBoxDecoration.constraints!.minWidth != 0.0 &&
+        } else if (widget.suggestionsBoxDecoration.constraints!.minWidth !=
+                0.0 &&
             widget.suggestionsBoxDecoration.constraints!.minWidth > w) {
           w = widget.suggestionsBoxDecoration.constraints!.minWidth;
-        } else if (widget.suggestionsBoxDecoration.constraints!.maxWidth != double.infinity &&
+        } else if (widget.suggestionsBoxDecoration.constraints!.maxWidth !=
+                double.infinity &&
             widget.suggestionsBoxDecoration.constraints!.maxWidth < w) {
           w = widget.suggestionsBoxDecoration.constraints!.maxWidth;
         }
@@ -821,22 +838,26 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
         offset: Offset(
             widget.suggestionsBoxDecoration.offsetX,
             _suggestionsBox!.direction == AxisDirection.down
-                ? _suggestionsBox!.textBoxHeight + widget.suggestionsBoxVerticalOffset
+                ? _suggestionsBox!.textBoxHeight +
+                    widget.suggestionsBoxVerticalOffset
                 : -widget.suggestionsBoxVerticalOffset),
         child: TextFieldTapRegion(
             onTapOutside: (e) {
-              if (widget.suggestionsBoxDecoration.closeSuggestionBoxWhenTapOutside) {
+              if (widget
+                  .suggestionsBoxDecoration.closeSuggestionBoxWhenTapOutside) {
                 if (this._suggestionsBox?.isOpened ?? false) {
                   this._suggestionsBox?.close();
                 }
               }
             },
-            child: _suggestionsBox!.direction == AxisDirection.down
+            child: suggestionsList
+            /* _suggestionsBox!.direction == AxisDirection.down
                 ? suggestionsList
                 : FractionalTranslation(
                     translation: const Offset(0.0, -1.0), // visually flips list to go up
                     child: suggestionsList,
-                  )),
+                  ) */
+            ),
       );
 
       // When wrapped in the Positioned widget, the suggestions box widget
@@ -885,7 +906,8 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
             textAlignVertical: widget.textFieldConfiguration.textAlignVertical,
             minLines: widget.textFieldConfiguration.minLines,
             maxLength: widget.textFieldConfiguration.maxLength,
-            maxLengthEnforcement: widget.textFieldConfiguration.maxLengthEnforcement,
+            maxLengthEnforcement:
+                widget.textFieldConfiguration.maxLengthEnforcement,
             obscureText: widget.textFieldConfiguration.obscureText,
             onChanged: widget.textFieldConfiguration.onChanged,
             onSubmitted: widget.textFieldConfiguration.onSubmitted,
@@ -894,14 +916,17 @@ class _DropDownSearchFieldState<T> extends State<DropDownSearchField<T>> with Wi
             onTapOutside: widget.textFieldConfiguration.onTapOutside,
             scrollPadding: widget.textFieldConfiguration.scrollPadding,
             textInputAction: widget.textFieldConfiguration.textInputAction,
-            textCapitalization: widget.textFieldConfiguration.textCapitalization,
-            keyboardAppearance: widget.textFieldConfiguration.keyboardAppearance,
+            textCapitalization:
+                widget.textFieldConfiguration.textCapitalization,
+            keyboardAppearance:
+                widget.textFieldConfiguration.keyboardAppearance,
             cursorWidth: widget.textFieldConfiguration.cursorWidth,
             cursorRadius: widget.textFieldConfiguration.cursorRadius,
             cursorColor: widget.textFieldConfiguration.cursorColor,
             mouseCursor: widget.textFieldConfiguration.mouseCursor,
             textDirection: widget.textFieldConfiguration.textDirection,
-            enableInteractiveSelection: widget.textFieldConfiguration.enableInteractiveSelection,
+            enableInteractiveSelection:
+                widget.textFieldConfiguration.enableInteractiveSelection,
             readOnly: widget.hideKeyboard,
             autofillHints: widget.textFieldConfiguration.autofillHints),
       ),
